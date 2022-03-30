@@ -1,3 +1,6 @@
+Original App Design Project - README Template
+===
+
 # FoodStacks
 
 ## Table of Contents
@@ -121,10 +124,162 @@ Digital Wireframe: https://www.figma.com/file/XklBhdDw58CgKC8nIYOb9f/FoodStacks-
 Interactive Prototype GIF: http://g.recordit.co/WC6ZOyn2bB.gif
 
 ## Schema 
-This section will be completed in Unit 9
 ### Models
-Add table of models
+| Property |  Type |Description |
+| -------- | ------ | --------- |
+|userId   |Pointer to User|For User Login/Logout|
+|restId |String |Restaurant Name|
+|restImage|File      |Photo of Restaurant Logo|
+|restLocation|Pointer to API|Unique Location of Restaurant|
+|userLocation|Pointer to API|Where the User is Currently|
+|restContact|String|Written Restaurant Contact Information|
+|restHours|String|Written Restaurant Hours Display|
+|restAdress|String|The Written Address of Restaurant|
+|tag/filter|String|Narrows Down Options of Restaurants|
+|map|File/Pointer to API|Displays GPS Location|
+|rangeFilter|Integer/Number|The Distance Range from User Location to All Available Restaurants|
+|userPassword|Pointer to User|Secures the User Account|
 ### Networking
-- Add list of network requests by screen 
-- Create basic snippets for each Parse network request
-- OPTIONAL: List endpoints if using existing API such as Yelp
+#### List of network requests by screen 
+* Login Screen
+   * Create/Post: User can create an account.  
+```
+  let user = PFUser()
+        user.username = usernameField.text
+        user.password = passwordField.text
+
+        
+        user.signUpInBackground{(success, error) in
+            if success{
+                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+            }
+            else{
+                print("Error: \(error?.localizedDescription)")
+            }
+        }
+```    
+   * Read/Get: User can login/logout, receives user information.
+```
+let username = usernameField.text!
+        let password = passwordField.text!
+        
+        PFUser.logInWithUsername(inBackground: username, password: password) { (user, error) in
+            if user != nil {
+                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+            }
+            else{
+                print("Error: \(error?.localizedDescription)")
+            }
+        }
+```
+    
+
+//i just add for you but you should edit to make sure it match to our property name 
+ 
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Override point for customization after application launch.
+        let parseConfig = ParseClientConfiguration {
+                    $0.applicationId = "Wd3jAu5MAM8qntnuejHbzreswChuxnQyKrVkg3ew" // <- UPDATE
+                    $0.clientKey = "gynDLyTYaI6md59t3HCGprHQtnBmdJDMmfmQ12X6" // <- UPDATE
+                    $0.server = "https://parseapi.back4app.com"
+            }
+            Parse.initialize(with: parseConfig)
+            // --- end copy
+        return true
+    }
+    
+* Home Screen 
+   * Read/Get: Retrieves location of user and location of restaurant.
+   * Read/Get: Selects a random restaurant.
+   
+ 
+  
+   Code: 
+        
+        let apikey = "gjSp5LrrEi9tJFLQALnw-RdZSRy-TLiJsfPM09LzFMNpMnmSHQZ2n2R_f3ptONYEalxMIudE9avxn_bQvvDZJc1zpPdfPDOvdh08RlT8vZGbqFx3dbtkuliMwATHXnYx"
+        let url = URL(string: "https://api.yelp.com/v3/transactions/delivery/search?latitude=\(lat)&longitude=\(long)")!
+        
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
+        
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
+        let task = session.dataTask(with: request) { (data, response, error) in
+           
+            if let error = error {
+                print(error.localizedDescription)
+            } else if let data = data {
+                
+                let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+                
+                let restDict = dataDictionary["businesses"] as! [[String: Any]]
+                
+                let restaurants = restDict.map({ Restaurant.init(dict: $0) })
+            
+                return completion(restaurants)
+                
+                }
+            } 
+            task.resume()   
+        
+    
+* Restaurant Information Screen
+   * Read/Get: Restaurant contact, hours, address, and GPS
+
+Code:
+
+  
+
+        var restaurant : [String:Any]!
+        print(movie["restId"])
+        
+        restId.text = restaurant["restId"] as? String
+        restId.sizeToFit()
+        
+        restHours.text = restaurant["hour"] as? String
+        restHours.sizeToFit()
+        
+        restAddress.text = restaurant["address"] as? String
+        restAddress.sizeToFit()
+        
+        restContact.text = restaurant["contact"] as? String
+        restContact.sizeToFit()
+        //get the restImage URL 
+        ...
+     
+    }
+    
+* Filter Screen
+   * Create/Post: Restaurant contact, hours, address, and GPS location
+   * Read/Get: Range, type of restaurant, and cuisine types
+   * Delete: Deletes/unfavorite restaurants
+ 
+ ```
+@IBAction func favoriteRestaurant(_ sender: Any) {
+            let tobeFavorited = !favorited
+            if(tobeFavorited) {
+                RestaurantAPICaller.client?.favoriteRestaurant(restId: restId, success: {
+                    self.setFavorite(true)
+                }, failure: { (error) in
+                    print("Favorite did not successed: \(error)")
+                })
+            } else {
+                RestaurantAPICaller.client?.unfavoriteRestaurant(restId: restId, success: {
+                    self.setFavorite(false)
+                }, failure: { (error) in
+                    print("Unfavorited did not succeed: \(error)")
+                })
+            }
+        }
+```
+
+
+##### OPTIONAL: List endpoints if using existing API such as Yelp
+* Google Maps API/MapKit
+
+* Yelp API
+   * Base URL- rs8INeaXGjCD5mlaCV1b865zxjzzbUMW-6qI0BMB-E2fIwSr484Sjnnk7H9_ozJaivyKlah76l5_fIJWJv1hBdiwWMTqlDwkTA54vaul7FeunnCqgiBugt0XNMpDYnYx
+
+| HTTP Verb |  Endpoint |Description |
+| -------- | ------ | --------- |
+|   | |  |
