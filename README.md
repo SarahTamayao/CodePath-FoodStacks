@@ -282,4 +282,6 @@ Code:
 
 | HTTP Verb |  Endpoint |Description |
 | -------- | ------ | --------- |
-|   | |  |
+|  GET | /city|  get all resturant in the city range|
+|  GET | /name|  get all restaurant name as restId|
+|  GET | /address|  get all resturant in the region address|
