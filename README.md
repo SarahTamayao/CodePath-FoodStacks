@@ -113,8 +113,7 @@ iOS app to help users decide where to eat out.
  
 
 ## Wireframes
-<img src="https://i.imgur.com/Rm5TA3c.png" width=200><img src="https://i.imgur.com/j3ioINf.png" width=200><img src="https://i.imgur.com/pQlDxqg.png" width=200>
-<img src="https://i.imgur.com/bRmoXNI.png" width=200><img src="https://i.imgur.com/NZfeZYm.png" width=200><img src="https://i.imgur.com/D1s3O56.png" width=200>
+
 
 ### [BONUS] Digital Wireframes & Mockups
 Digital Wireframe: https://www.figma.com/file/XklBhdDw58CgKC8nIYOb9f/FoodStacks-Mockup?node-id=0%3A1
