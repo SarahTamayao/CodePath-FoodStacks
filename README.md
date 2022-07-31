@@ -120,7 +120,7 @@ Digital Wireframe: https://www.figma.com/file/XklBhdDw58CgKC8nIYOb9f/FoodStacks-
 
 
 ### [BONUS] Interactive Prototype
-Interactive Prototype GIF: http://g.recordit.co/WC6ZOyn2bB.gif
+Interactive Prototype GIF: 
 
 ## Schema 
 ### Models
